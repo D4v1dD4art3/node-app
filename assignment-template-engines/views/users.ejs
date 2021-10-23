@@ -1,0 +1,12 @@
+<%- include('includes/head.ejs')%>
+<h1>welcome new users</h1>
+<% if(users.length > 0) { %>
+    <ul>
+        <% for (let user of users) { %>
+            <li><%= user.name  %></li>
+        <% } %>
+    </ul>
+    <% } else { %>
+        <h1>Please register more users</h1>
+        <% } %>
+<%- include('includes/end.ejs')%>

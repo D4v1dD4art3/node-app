@@ -1,0 +1,29 @@
+.form-control {
+  margin: 1rem 0;
+}
+.form-control label {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.form-control input {
+  height: 25px;
+}
+
+.form-control input,
+.form-control textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: #00695d34;
+  text-align: center;
+  color: white;
+}
+
+.form-control input:focus,
+.form-control label:focus,
+.form-control textarea:focus {
+  outline-color: #00695c;
+  background-color: #280a3a;
+  color: white;
+}
