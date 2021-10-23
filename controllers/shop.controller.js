@@ -47,7 +47,6 @@ exports.getOrders = (req, res, next) => {
 exports.getIndex = (req, res, next) => {
   Product.findAll()
     .then((products) => {
-      console.log(products);
       res.render('shop/index', {
         prods: products,
         docTitle: 'All Products',
@@ -75,14 +74,16 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  const prodId = req.params.productId;
-  Product.findById(prodId)
-    .then(([[product]]) => {
-      console.log(product);
-      res.render('shop/product-detail', {
-        product: product,
-        docTitle: product.title,
-        path: '/products',
+  const prodId = req.params.idProduct;
+  Product.findByPk(prodId)
+    .then((result) => {
+      if (!result) {
+        return res.redirect('/');
+      }
+      return res.render('shop/product-detail', {
+        product: result,
+        docTitle: result.title,
+        path: '/',
       });
     })
     .catch((err) => {
