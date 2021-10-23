@@ -5,11 +5,11 @@ const shopController = require('../controllers/shop.controller');
 
 router.get('/', shopController.getIndex);
 
-router.get('/cart', shopController.getCart);
+// router.get('/cart', shopController.getCart);
 
-router.post('/cart', shopController.postCarts);
+// router.post('/cart', shopController.postCarts);
 
-router.post('/cart-delete-item', shopController.postDeleteCartProduct);
+// router.post('/cart-delete-item', shopController.postDeleteCartProduct);
 
 router.get('/orders', shopController.getOrders);
 

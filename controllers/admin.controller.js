@@ -24,10 +24,10 @@ exports.postAddProducts = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
   Product.create({
-    title,
-    price,
-    imageUrl,
-    description,
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
   })
     .then(() => {
       console.log('Created Product!');
