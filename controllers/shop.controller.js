@@ -45,25 +45,31 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
+      console.log(products);
       res.render('shop/index', {
-        prods: rows,
+        prods: products,
         docTitle: 'All Products',
         path: '/',
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows]) => {
+  Product.findAll()
+    .then((products) => {
       res.render('shop/products-list', {
-        prods: rows,
+        prods: products,
         docTitle: 'Shop',
         path: '/products',
       });
+    })
+    .catch((err) => {
+      console.log(err);
     })
     .catch((err) => console.log(err));
 };
