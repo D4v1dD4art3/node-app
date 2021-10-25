@@ -2,39 +2,54 @@ const Product = require('../models/product.model');
 const Cart = require('../models/cart.model');
 exports.getCart = (req, res, next) => {
   Cart.getProducts((cart) => {
-    Product.fetchAll((products) => {
-      const carProducts = [];
-      for (product of products) {
-        const cartProductData = cart.products.find(
-          (prod) => prod.id === product.id
-        );
-        if (cartProductData) {
-          carProducts.push({ productData: product, qty: cartProductData.qty });
+    Product.findAll()
+      .then((products) => {
+        const carProducts = [];
+        for (product of products) {
+          const cartProductData = cart.products.find(
+            (prod) => prod.id === product.id
+          );
+          if (cartProductData) {
+            carProducts.push({
+              productData: product,
+              qty: cartProductData.qty,
+            });
+          }
         }
-      }
-      res.render('shop/cart', {
-        path: '/cart',
-        docTitle: 'Your Cart',
-        products: carProducts,
+        res.render('shop/cart', {
+          path: '/cart',
+          docTitle: 'Your Cart',
+          products: carProducts,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    });
   });
 };
 
 exports.postCarts = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
+  Product.findByPk(prodId).then((product) => {
+    if (!product) {
+      return console.log('not product found');
+    }
     Cart.addProduct(prodId, product.price);
+    res.redirect('/cart');
   });
-  res.redirect('/cart');
 };
 
 exports.postDeleteCartProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
-    Cart.deleteProduct(prodId, product.price);
-    res.redirect('/cart');
-  });
+  Product.findByPk(prodId)
+    .then((product) => {
+      if (!product) {
+        return console.log('not products found');
+      }
+      Cart.deleteProduct(prodId, product.price);
+      res.redirect('/cart');
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
