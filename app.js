@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoDbConnect = require('./utils/database').mongoConnect;
 const app = express();
+const User = require('./models/user.model');
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -18,15 +19,14 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  // User.findByPk(1)
-  //   .then((user) => {
-  //     req.user = user;
-  //     next();
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-  next();
+  User.findById('618ab74c2ffcfb0568851a26')
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.use('/admin', adminRoutes);
