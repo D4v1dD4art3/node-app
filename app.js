@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
-const mongoDbConnect = require('./utils/database');
+const mongoDbConnect = require('./utils/database').mongoConnect;
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// const adminRoutes = require('./routes/admin.route');
-// const shopRoutes = require('./routes/shop.route');
+const adminRoutes = require('./routes/admin.route');
+const shopRoutes = require('./routes/shop.route');
 const errorController = require('./controllers/error.controller');
 
 app.use(express.urlencoded({ extended: true }));
@@ -26,14 +26,14 @@ app.use((req, res, next) => {
   //   .catch((err) => {
   //     console.log(err);
   //   });
+  next();
 });
 
-// app.use('/admin', adminRoutes);
-// app.use(shopRoutes);
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 app.use(errorController.get404);
 
-mongoDbConnect((clientObject) => {
-  console.log(clientObject);
+mongoDbConnect(() => {
   app.listen(3000);
 });
 

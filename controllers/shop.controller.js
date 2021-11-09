@@ -80,7 +80,7 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.findAll()
+  Product.fetchAll()
     .then((products) => {
       res.render('shop/index', {
         prods: products,
@@ -94,7 +94,7 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  Product.fetchAll()
     .then((products) => {
       res.render('shop/products-list', {
         prods: products,
@@ -110,7 +110,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.idProduct;
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then((result) => {
       if (!result) {
         return res.redirect('/');
