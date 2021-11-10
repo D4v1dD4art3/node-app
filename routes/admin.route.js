@@ -4,9 +4,10 @@ const router = express.Router();
 
 // GET methods =>
 router.get('/products', adminController.getProducts);
+
 router.get('/add-product', adminController.getAddProducts);
 
-// Post methods =>
+// // Post methods =>
 router.post('/add-product', adminController.postAddProducts);
 
 router.get('/edit-product/:idProduct', adminController.getEditProducts);
