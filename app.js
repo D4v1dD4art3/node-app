@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
 const User = require('./models/user.model');
+const session = require('express-session');
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -14,6 +15,9 @@ const errorController = require('./controllers/error.controller');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  session({ secret: 'my secret', resave: false, saveUninitialized: false })
+);
 app.use((req, res, next) => {
   res.locals.url = req.originalUrl;
   next();
