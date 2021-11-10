@@ -12,7 +12,10 @@ exports.getAddProducts = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
+    // .select('title price -_id')
+    // .populate('userId', 'name')
     .then((products) => {
+      console.log(products);
       res.render('admin/products', {
         prods: products,
         docTitle: 'Admin Products',
@@ -27,7 +30,13 @@ exports.postAddProducts = (req, res, next) => {
   const price = req.body.price;
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
-  const product = new Product({ title, price, description, imageUrl });
+  const product = new Product({
+    title,
+    price,
+    description,
+    imageUrl,
+    userId: req.user,
+  });
   product
     .save()
     .then(() => {
