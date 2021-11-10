@@ -17,6 +17,7 @@
           >Orders</a
         >
       </li>
+      <% if(isAuthenticated) { %>
       <li class="main-header__item">
         <a
           class="<%= path === '/admin/add-product' ? 'active' : '' %>"
@@ -29,6 +30,14 @@
           class="<%= path === '/admin/products' ? 'active' : '' %>"
           href="/admin/products"
           >Admin Product</a
+        >
+      </li>
+      <% } %>
+    </ul>
+    <ul class="main-header__item-list">
+      <li class="main-header__item">
+        <a class="<%= path === '/login' ? 'active' : '' %>" href="/auth/login"
+          >Login</a
         >
       </li>
     </ul>

@@ -2,7 +2,9 @@ const Product = require('../models/product.model');
 const Order = require('../models/order.model');
 
 const mongoose = require('mongoose');
+
 exports.getCart = (req, res, next) => {
+  const isLoggedIn = req.get('Cookie').split('=')[1];
   req.user
     .populate('cart.items.productId')
     .then((user) => {
@@ -11,6 +13,7 @@ exports.getCart = (req, res, next) => {
         path: '/cart',
         docTitle: 'Your Cart',
         products: products,
+        isAuthenticated: isLoggedIn,
       });
     })
     .catch((err) => {
@@ -51,21 +54,16 @@ exports.getOrders = (req, res, next) => {
   res.render('shop/order', {
     path: '/orders',
     docTitle: 'Your Orders',
+    isAuthenticated: req.isLoggedIn,
   });
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.find()
-    .then((products) => {
-      res.render('shop/index', {
-        prods: products,
-        docTitle: 'All Products',
-        path: '/',
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  res.render('shop/index', {
+    docTitle: 'All Products',
+    path: '/',
+    isAuthenticated: req.isLoggedIn,
+  });
 };
 
 exports.getProducts = (req, res, next) => {
@@ -75,6 +73,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         docTitle: 'Shop',
         path: '/products',
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -94,6 +93,7 @@ exports.getProduct = (req, res, next) => {
         product: product,
         docTitle: product.title,
         path: '/',
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -135,6 +135,7 @@ exports.getOrders = (req, res, next) => {
         path: '/orders',
         docTitle: 'Your Orders',
         orders,
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err) => {
