@@ -30,14 +30,12 @@
           <label for="description">description</label>
           <textarea
             name="description"
-            id="description"
-            cols="30"
-            rows="10">
+            id="description">
             <% if(editing) { %><%= product.description %><% } %>
         </textarea>
         </div>
         <% if (editing) { %>
-            <input type="hidden" name="productId" value="<%= product.id %>">
+            <input type="hidden" name="productId" value="<%= product._id %>">
             <% } %>  
         <button type="submit">
             <% if (editing) { %> 
