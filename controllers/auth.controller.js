@@ -31,7 +31,30 @@ exports.postLogin = (req, res, next) => {
     });
 };
 
-exports.postSignup = (req, res, next) => {};
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect('/auth/login');
+      }
+      const user = new User({
+        email,
+        password,
+        cart: { items: [] },
+      });
+      return user.save();
+    })
+    .then((result) => {
+      console.log('User created');
+      res.redirect('/auth/login');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
