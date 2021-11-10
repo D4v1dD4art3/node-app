@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const mongoDbConnect = require('./utils/database').mongoConnect;
+const mongoose = require('mongoose');
 const app = express();
 const User = require('./models/user.model');
 app.set('view engine', 'ejs');
@@ -19,9 +19,9 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  User.findById('618ab74c2ffcfb0568851a26')
+  User.findById('618b3b7f41436507cc087bd0')
     .then((user) => {
-      req.user = new User(user.username, user.email, user.cart, user._id);
+      req.user = user;
       next();
     })
     .catch((err) => {
@@ -33,8 +33,28 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(errorController.get404);
 
-mongoDbConnect(() => {
-  app.listen(3000);
-});
+mongoose
+  .connect(
+    'mongodb+srv://v25798979D:SjNV2JvCEynwUCAQ@cluster0.e7urz.mongodb.net/shop?retryWrites=true&w=majority'
+  )
+  .then((result) => {
+    return User.findOne();
+  })
+  .then((user) => {
+    if (!user) {
+      const user = new User({
+        name: 'David',
+        email: 'david@duartechsolutions.com',
+        cart: {
+          items: [],
+        },
+      });
+      user.save();
+    }
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 // SjNV2JvCEynwUCAQ mondoDb password
