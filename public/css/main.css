@@ -1,56 +1,53 @@
-body {
-  margin: 0;
-  padding: 0;
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+* {
   box-sizing: border-box;
-  background-color: rgb(49, 47, 47);
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background-color: rgb(32, 32, 32);
   color: white;
 }
-.main-header {
-  width: 100%;
-  height: 3.5rem;
-  background-color: rgb(195, 0, 255);
+
+main {
+  padding: 1rem;
+  margin: auto;
 }
-.main-header__item a {
-  text-decoration: none;
-  margin: 10px;
-  color: azure;
-}
-.main-header__item a:hover,
-.main-header__item a:active,
-.main-header__item a.active {
-  color: rgb(20, 235, 74);
-  transform: scale3d(1.2);
-}
-.main-header__item-list {
-  margin: 0;
-  padding: 10px 0;
-  text-decoration: none;
-  list-style: none;
-  display: flex;
-  align-items: center;
+
+form {
+  display: inline;
 }
 
 .centered {
   text-align: center;
 }
 
-main {
-  padding: 1rem;
+.image {
+  height: 20rem;
+}
+
+.image img {
+  height: 100%;
 }
 
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: #9b11a0;
+  background-color: #500339;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
 .main-header__nav {
   height: 100%;
   width: 100%;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
-  /* margin-left: 10px; */
 }
 
 .main-header__item-list {
@@ -65,57 +62,107 @@ main {
   padding: 0;
 }
 
-.main-header__item a {
+.main-header__item a,
+.main-header__item button {
+  font: inherit;
+  background: transparent;
+  border: none;
   text-decoration: none;
-  color: rgb(243, 234, 234);
+  color: white;
+  cursor: pointer;
 }
 
 .main-header__item a:hover,
 .main-header__item a:active,
-.main-header__item a.active {
-  color: #2dd617;
+.main-header__item a.active,
+.main-header__item button:hover,
+.main-header__item button:active {
+  color: #ffeb3b;
 }
 
-.product-form {
-  width: 20rem;
+.mobile-nav {
+  width: 30rem;
+  height: 100vh;
   max-width: 90%;
-  margin: auto;
-}
-
-.form-control {
-  margin: 1rem 0;
-}
-
-.form-control label,
-.form-control input {
-  display: block;
-  width: 100%;
-}
-
-.form-control input {
-  border: 1px solid #dbc441;
-  font: inherit;
-  border-radius: 2px;
-}
-
-label {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgb(82, 82, 82);
   color: white;
+  z-index: 10;
+  padding: 2rem 1rem 1rem 2rem;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
 }
 
-button {
+.mobile-nav.open {
+  transform: translateX(0);
+}
+
+.mobile-nav__item-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-nav__item {
+  margin: 1rem;
+  padding: 0;
+}
+
+.mobile-nav__item a,
+.mobile-nav__item button {
   font: inherit;
-  border: 1px solid #3e00a1;
-  color: #d0d8db;
-  background: rgb(14, 1, 1);
-  border-radius: 3px;
+  text-decoration: none;
+  color: white;
+  font-size: 1.5rem;
+  padding: 0.5rem 2rem;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  padding: 10px 40px;
 }
 
-button:hover,
-button:active {
-  background-color: #3e00a1;
+.mobile-nav__item a:active,
+.mobile-nav__item a:hover,
+.mobile-nav__item a.active,
+.mobile-nav__item button:hover,
+.mobile-nav__item button:active {
+  background: #460253;
   color: white;
+  border-radius: 3px;
+}
+
+#side-menu-toggle {
+  border: 1px solid white;
+  font: inherit;
+  padding: 0.5rem;
+  display: block;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+#side-menu-toggle:focus {
+  outline: none;
+}
+
+#side-menu-toggle:active,
+#side-menu-toggle:hover {
+  color: #ffeb3b;
+  border-color: #ffeb3b;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+  display: none;
 }
 
 .grid {
@@ -126,13 +173,13 @@ button:active {
 }
 
 .card {
-  background-color: rgb(35 47 38 / 86%);
-  box-shadow: 11px 12px 20px 9px rgb(248 241 241 / 26%);
+  box-shadow: 0px 7px 16px 16px rgb(172 168 168 / 26%);
 }
 
 .card__header,
 .card__content {
   padding: 1rem;
+  background-color: #380b32;
 }
 
 .card__header h1,
@@ -161,6 +208,9 @@ button:active {
 }
 
 .btn {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  text-decoration: none;
   font: inherit;
   border: 1px solid #00695c;
   color: #00695c;
@@ -173,4 +223,25 @@ button:active {
 .btn:active {
   background-color: #00695c;
   color: white;
+}
+
+.btn.danger {
+  color: red;
+  border-color: red;
+}
+
+.btn.danger:hover,
+.btn.danger:active {
+  background: red;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .main-header__nav {
+    display: flex;
+  }
+
+  #side-menu-toggle {
+    display: none;
+  }
 }
