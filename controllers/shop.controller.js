@@ -61,7 +61,6 @@ exports.getIndex = (req, res, next) => {
   res.render('shop/index', {
     docTitle: 'All Products',
     path: '/',
-    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -72,7 +71,6 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         docTitle: 'Shop',
         path: '/products',
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
