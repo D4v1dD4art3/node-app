@@ -1,3 +1,4 @@
+const bcryptjs = require('bcryptjs');
 const User = require('../models/user.model');
 
 exports.getLogin = (req, res, next) => {
@@ -17,14 +18,27 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findById('618b3b7f41436507cc087bd0')
+  const email = req.body.email;
+  const password = req.body.password;
+  let fetchUser;
+  User.findOne({ email: email })
     .then((user) => {
-      req.session.isLoggedIn = true;
-      req.session.user = user;
-      req.session.save((err) => {
-        console.log(err);
-        res.redirect('/');
-      });
+      fetchUser = user;
+      if (!user) {
+        return res.redirect('/auth/login');
+      }
+      return bcryptjs.compare(password, user.password);
+    })
+    .then((doMatch) => {
+      if (doMatch) {
+        req.session.isLoggedIn = true;
+        req.session.user = fetchUser;
+        return req.session.save((err) => {
+          console.log(err);
+          res.redirect('/');
+        });
+      }
+      res.redirect('/auth/login');
     })
     .catch((err) => {
       console.log(err);
@@ -38,19 +52,25 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: email })
     .then((userDoc) => {
       if (userDoc) {
-        return res.redirect('/auth/login');
+        console.log('This user has signup');
+        return res.redirect('/auth/signup');
       }
-      const user = new User({
-        email,
-        password,
-        cart: { items: [] },
-      });
-      return user.save();
+      return bcryptjs
+        .hash(password, 12)
+        .then((hashedPassword) => {
+          const user = new User({
+            email,
+            password: hashedPassword,
+            cart: { items: [] },
+          });
+          return user.save();
+        })
+        .then((result) => {
+          console.log('User created');
+          res.redirect('/auth/login');
+        });
     })
-    .then((result) => {
-      console.log('User created');
-      res.redirect('/auth/login');
-    })
+
     .catch((err) => {
       console.log(err);
     });
