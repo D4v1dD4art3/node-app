@@ -5,6 +5,7 @@ const User = require('./models/user.model');
 const session = require('express-session');
 const mongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
+const flash = require('connect-flash');
 
 const adminRoutes = require('./routes/admin.route');
 const shopRoutes = require('./routes/shop.route');
@@ -37,6 +38,7 @@ app.use(
 );
 
 app.use(csrfProtection);
+app.use(flash());
 
 app.use((req, res, next) => {
   if (req.session.isLoggedIn) {

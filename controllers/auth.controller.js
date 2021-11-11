@@ -6,6 +6,7 @@ exports.getLogin = (req, res, next) => {
     path: '/login',
     docTitle: 'Login',
     isAuthenticated: false,
+    errorMessage: req.flash('error'),
   });
 };
 
@@ -25,6 +26,7 @@ exports.postLogin = (req, res, next) => {
     .then((user) => {
       fetchUser = user;
       if (!user) {
+        req.flash('error', 'Invalid email or password');
         return res.redirect('/auth/login');
       }
       return bcryptjs.compare(password, user.password);
