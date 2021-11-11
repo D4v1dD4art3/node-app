@@ -3,9 +3,6 @@ const ObjectId = mongodb.ObjectId;
 const Product = require('../models/product.model');
 
 exports.getAddProducts = (req, res, next) => {
-  if (!req.session.isLoggedIn) {
-    return res.redirect('/auth/login');
-  }
   res.render('admin/edit-product', {
     docTitle: 'Add product',
     path: '/admin/add-product',
@@ -54,9 +51,6 @@ exports.postAddProducts = (req, res, next) => {
 };
 
 exports.getEditProducts = (req, res, next) => {
-  if (!req.session.isLoggedIn) {
-    return res.redirect('/auth/login');
-  }
   const editMode = req.query.edit;
   if (!editMode) {
     return res.redirect('/');

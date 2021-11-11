@@ -4,9 +4,6 @@ const Order = require('../models/order.model');
 const mongoose = require('mongoose');
 
 exports.getCart = (req, res, next) => {
-  if (!req.session.isLoggedIn) {
-    return res.redirect('/auth/login');
-  }
   req.session.user
     .populate('cart.items.productId')
     .then((user) => {
@@ -53,9 +50,6 @@ exports.postDeleteCartProduct = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  if (!req.session.isLoggedIn) {
-    return res.redirect('/auth/login');
-  }
   res.render('shop/order', {
     path: '/orders',
     docTitle: 'Your Orders',
