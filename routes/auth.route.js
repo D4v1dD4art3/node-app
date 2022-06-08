@@ -10,7 +10,27 @@ router.get('/signup', authController.getSignup);
 
 router.get('/reset', authController.getReset);
 
-router.post('/login', authController.postLogin);
+router.post(
+  '/login',
+  [
+    body('email', 'Please enter a valid email.')
+      .isEmail()
+      .custom((value, { _req }) => {
+        return User.findOne({ email: value }).then(user => {
+          if (!user) {
+            return Promise.reject('Invalid email or password');
+          }
+        });
+      }),
+    body(
+      'password',
+      'Please enter a password with numbers and at least 5 characters.',
+    )
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+  ],
+  authController.postLogin,
+);
 
 router.post('/logout', authController.postLogout);
 
@@ -39,6 +59,7 @@ router.post(
       if (value !== req.body.password) {
         throw new Error('Passwords has to match');
       }
+      return true;
     }),
   ],
   authController.postSignup,

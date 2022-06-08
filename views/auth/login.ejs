@@ -11,7 +11,9 @@
       <form class="login-form" action="/auth/login"method="POST">
         <div class="form-control">
           <label for="email">email</label>
-          <input 
+          <input
+            class="<%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>"
+            value="<%= oldInput.email %> "
             type="text"
             name="email"
             id="email"
@@ -20,12 +22,15 @@
         <div class="form-control">
             <label for="password">password</label>
             <input
+            class="<%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>"
+              value="<%= oldInput.password %>"
               type="password"
               name="password"
               id="password"
               />
         </div>
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <input
+          type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <button type="submit">Login</button>
       </form>
       <div class="centered">
