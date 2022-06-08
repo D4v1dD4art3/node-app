@@ -86,40 +86,29 @@ exports.postSignup = (req, res, next) => {
       errorMessage: errors.array()[0].msg,
     });
   }
-  User.findOne({ email: email })
-    .then(userDoc => {
-      if (userDoc) {
-        req.flash('error', 'Email exist already please pick a different one');
-        return res.redirect('/auth/signup');
-      }
-      return bcryptjs
-        .hash(password, 12)
-        .then(hashedPassword => {
-          const user = new User({
-            email,
-            password: hashedPassword,
-            cart: { items: [] },
-          });
-          return user.save();
-        })
-        .then(result => {
-          res.redirect('/auth/login');
-          return transport.sendMail({
-            to: email,
-            from: 'shop@node-complete.com',
-            subject: 'Signup succeeded',
-            html: '<h1>You successfully signed up</h1>',
-          });
-        })
-        .then(() => {
-          console.log('email sent');
-        })
-        .catch(err => console.log(err));
+  bcryptjs
+    .hash(password, 12)
+    .then(hashedPassword => {
+      const user = new User({
+        email,
+        password: hashedPassword,
+        cart: { items: [] },
+      });
+      return user.save();
     })
-
-    .catch(err => {
-      console.log(err);
-    });
+    .then(result => {
+      res.redirect('/auth/login');
+      return transport.sendMail({
+        to: email,
+        from: 'shop@node-complete.com',
+        subject: 'Signup succeeded',
+        html: '<h1>You successfully signed up</h1>',
+      });
+    })
+    .then(() => {
+      console.log('email sent');
+    })
+    .catch(err => console.log(err));
 };
 
 exports.postLogout = (req, res, next) => {

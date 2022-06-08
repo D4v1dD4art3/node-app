@@ -1,6 +1,7 @@
 const express = require('express');
-const { check } = require('express-validator');
+const { check, body } = require('express-validator');
 const authController = require('../controllers/auth.controller');
+const User = require('../models/user.model');
 const router = express.Router();
 
 router.get('/login', authController.getLogin);
@@ -15,7 +16,31 @@ router.post('/logout', authController.postLogout);
 
 router.post(
   '/signup',
-  check('email').isEmail().withMessage('Please enter a valid email'),
+  [
+    check('email')
+      .isEmail()
+      .withMessage('Please enter a valid email')
+      .custom((value, { _req }) => {
+        return User.findOne({ email: value }).then(userDoc => {
+          if (userDoc) {
+            return Promise.reject(
+              'Email exist already please pick a different one',
+            );
+          }
+        });
+      }),
+    body(
+      'password',
+      'Please enter a password with numbers and at least 5 characters.',
+    )
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+    body('confirmPassword').custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Passwords has to match');
+      }
+    }),
+  ],
   authController.postSignup,
 );
 
