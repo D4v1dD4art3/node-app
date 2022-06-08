@@ -15,15 +15,14 @@ exports.getProducts = (req, res, next) => {
   Product.find({ userId: req.session.user._id })
     // .select('title price -_id')
     // .populate('userId', 'name')
-    .then((products) => {
-      console.log(products);
+    .then(products => {
       res.render('admin/products', {
         prods: products,
         docTitle: 'Admin Products',
         path: '/admin/products',
       });
     })
-    .catch((error) => console.log(error));
+    .catch(error => console.log(error));
 };
 
 exports.postAddProducts = (req, res, next) => {
@@ -44,7 +43,7 @@ exports.postAddProducts = (req, res, next) => {
       console.log('Created Product!');
       return res.redirect('/products');
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 };
@@ -56,7 +55,7 @@ exports.getEditProducts = (req, res, next) => {
   }
   const prodId = req.params.idProduct;
   Product.findById(prodId)
-    .then((product) => {
+    .then(product => {
       if (!product) {
         return res.redirect('/');
       }
@@ -67,7 +66,7 @@ exports.getEditProducts = (req, res, next) => {
         product: product,
       });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 };
@@ -79,7 +78,7 @@ exports.postEditProduct = (req, res, next) => {
   const updatedDesc = req.body.description;
   const updatedImageUrl = req.body.imageUrl;
   Product.findById(prodId)
-    .then((product) => {
+    .then(product => {
       if (product.userId.toString() !== req.session.user._id.toString()) {
         return res.redirect('/');
       }
@@ -87,12 +86,12 @@ exports.postEditProduct = (req, res, next) => {
       product.price = updatedPrice;
       product.description = updatedDesc;
       product.imageUrl = updatedImageUrl;
-      return product.save().then((result) => {
+      return product.save().then(result => {
         console.log('Updated Product');
         res.redirect('/admin/products');
       });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 };
@@ -104,7 +103,7 @@ exports.postDeleteProduct = (req, res, next) => {
     .then(() => {
       res.redirect('/admin/products');
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 };
