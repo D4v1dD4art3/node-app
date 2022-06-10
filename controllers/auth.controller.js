@@ -13,6 +13,12 @@ const transport = nodemailer.createTransport({
   },
 });
 
+const serverErrorHandler = err => {
+  const error = new Error(err);
+  error.httpStatusCode = 500;
+  return next(error);
+};
+
 exports.getLogin = (req, res, _next) => {
   let message = req.flash('error');
   if (message.length > 0) {
@@ -88,9 +94,7 @@ exports.postLogin = (req, res, _next) => {
       }
       res.redirect('/auth/login');
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
 
 exports.postSignup = (req, res, _next) => {
@@ -133,7 +137,7 @@ exports.postSignup = (req, res, _next) => {
     .then(() => {
       console.log('email sent');
     })
-    .catch(err => console.log(err));
+    .catch(serverErrorHandler);
 };
 
 exports.postLogout = (req, res, _next) => {
@@ -191,9 +195,7 @@ exports.postReset = (req, res, _next) => {
           `,
         });
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(serverErrorHandler);
   });
 };
 exports.getNewPassword = (req, res, _next) => {
@@ -215,7 +217,7 @@ exports.getNewPassword = (req, res, _next) => {
         passwordToken: token,
       });
     })
-    .catch(_err => {});
+    .catch(serverErrorHandler);
 };
 
 exports.postNewPassword = (req, res, _next) => {
@@ -242,5 +244,5 @@ exports.postNewPassword = (req, res, _next) => {
       console.log('password reset!');
       res.redirect('/auth/login');
     })
-    .catch(_err => {});
+    .catch(serverErrorHandler);
 };

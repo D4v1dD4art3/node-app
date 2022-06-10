@@ -3,6 +3,12 @@ const Order = require('../models/order.model');
 
 const mongoose = require('mongoose');
 
+const serverErrorHandler = err => {
+  const error = new Error(err);
+  error.httpStatusCode = 500;
+  return next(error);
+};
+
 exports.getCart = (req, res, next) => {
   req.session.user
     .populate('cart.items.productId')
@@ -14,9 +20,7 @@ exports.getCart = (req, res, next) => {
         products: products,
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
 
 exports.postCarts = (req, res, next) => {
@@ -30,9 +34,7 @@ exports.postCarts = (req, res, next) => {
       console.log(result);
       res.redirect('/cart');
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
 
 exports.postDeleteCartProduct = (req, res, next) => {
@@ -43,9 +45,7 @@ exports.postDeleteCartProduct = (req, res, next) => {
       console.log('Items was deleted!');
       res.redirect('/cart');
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
 
 exports.getOrders = (req, res, next) => {
@@ -71,9 +71,7 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
 
 exports.getProduct = (req, res, next) => {
@@ -89,9 +87,7 @@ exports.getProduct = (req, res, next) => {
         path: '/',
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
 
 exports.postOrder = (req, res, next) => {
@@ -116,9 +112,7 @@ exports.postOrder = (req, res, next) => {
     .then(() => {
       res.redirect('/orders');
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
 
 exports.getOrders = (req, res, next) => {
@@ -130,7 +124,5 @@ exports.getOrders = (req, res, next) => {
         orders,
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(serverErrorHandler);
 };
