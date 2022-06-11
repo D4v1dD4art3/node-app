@@ -6,11 +6,33 @@ const session = require('express-session');
 const mongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const multer = require('multer');
 
 const adminRoutes = require('./routes/admin.route');
 const shopRoutes = require('./routes/shop.route');
 const authRoute = require('./routes/auth.route');
 const errorController = require('./controllers/error.controller');
+
+const fileStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (_req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  },
+});
+
+const fileFilter = (_req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 const MONGODB_URI =
   'mongodb+srv://v25798979D:SjNV2JvCEynwUCAQ@cluster0.e7urz.mongodb.net/shop?retryWrites=true&w=majority';
@@ -26,8 +48,12 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'),
+);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(
   session({
     secret: 'my secret',
@@ -46,14 +72,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res, next) => {
-//   if (req.session.isLoggedIn) {
-//     req.session.user = new User().init(req.session.user);
-//   }
-//   next();
-// });
-
-// another alternative
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();

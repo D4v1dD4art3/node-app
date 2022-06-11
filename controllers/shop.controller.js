@@ -3,24 +3,29 @@ const Order = require('../models/order.model');
 
 const mongoose = require('mongoose');
 
-const serverErrorHandler = err => {
+const serverErrorHandler = err => next => {
   const error = new Error(err);
   error.httpStatusCode = 500;
   return next(error);
 };
 
 exports.getCart = (req, res, next) => {
-  req.session.user
+  req.user
     .populate('cart.items.productId')
+    .execPopulate()
     .then(user => {
       const products = user.cart.items;
       res.render('shop/cart', {
         path: '/cart',
-        docTitle: 'Your Cart',
+        pageTitle: 'Your Cart',
         products: products,
       });
     })
-    .catch(serverErrorHandler);
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.postCarts = (req, res, next) => {
@@ -34,7 +39,7 @@ exports.postCarts = (req, res, next) => {
       console.log(result);
       res.redirect('/cart');
     })
-    .catch(serverErrorHandler);
+    .catch(err => serverErrorHandler(err)(next));
 };
 
 exports.postDeleteCartProduct = (req, res, next) => {
@@ -45,7 +50,7 @@ exports.postDeleteCartProduct = (req, res, next) => {
       console.log('Items was deleted!');
       res.redirect('/cart');
     })
-    .catch(serverErrorHandler);
+    .catch(err => serverErrorHandler(err)(next));
 };
 
 exports.getOrders = (req, res, next) => {
@@ -56,10 +61,15 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  res.render('shop/index', {
-    docTitle: 'All Products',
-    path: '/',
-  });
+  Product.find()
+    .then(products => {
+      res.render('shop/index', {
+        prods: products,
+        docTitle: 'Shop',
+        path: '/',
+      });
+    })
+    .catch(err => serverErrorHandler(err)(next));
 };
 
 exports.getProducts = (req, res, next) => {
@@ -71,7 +81,7 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
       });
     })
-    .catch(serverErrorHandler);
+    .catch(err => serverErrorHandler(err)(next));
 };
 
 exports.getProduct = (req, res, next) => {
@@ -87,7 +97,7 @@ exports.getProduct = (req, res, next) => {
         path: '/',
       });
     })
-    .catch(serverErrorHandler);
+    .catch(err => serverErrorHandler(err)(next));
 };
 
 exports.postOrder = (req, res, next) => {
@@ -112,7 +122,7 @@ exports.postOrder = (req, res, next) => {
     .then(() => {
       res.redirect('/orders');
     })
-    .catch(serverErrorHandler);
+    .catch(err => serverErrorHandler(err)(next));
 };
 
 exports.getOrders = (req, res, next) => {
@@ -124,5 +134,5 @@ exports.getOrders = (req, res, next) => {
         orders,
       });
     })
-    .catch(serverErrorHandler);
+    .catch(err => serverErrorHandler(err)(next));
 };
